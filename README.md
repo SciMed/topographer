@@ -1,6 +1,11 @@
 # Topographer
 
-TODO: Write a gem description
+Topographer is a gem that provides functionality to conveniently import from various data sources into
+ActiveRecord or other ORM systems.  This accomplished by defining an input wrapper, a mapping from input data to
+ models, and a strategy for use in persisting data.
+
+ Check back soon for more documentation.
+
 
 ## Installation
 
@@ -18,7 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Check back soon for detailed usage instructions
 
 ## Contributing
 
@@ -27,3 +32,7 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+=======
+Topographer
+===========
+
