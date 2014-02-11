@@ -1,4 +1,4 @@
-class Importer::Logger::FatalErrorEntry < Importer::Logger::LogEntry
+class Topographer::Importer::Logger::FatalErrorEntry < Topographer::Importer::Logger::LogEntry
   attr_reader :message, :timestamp, :model_name
 
   def initialize(input_identifier, message)

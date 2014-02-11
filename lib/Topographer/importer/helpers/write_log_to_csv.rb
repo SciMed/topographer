@@ -1,6 +1,6 @@
 require 'singleton'
 require 'csv'
-class Importer::Helpers::WriteLogToCSV
+class Topographer::Importer::Helpers::WriteLogToCSV
   include Singleton
 
   def initialize

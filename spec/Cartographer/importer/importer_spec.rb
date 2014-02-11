@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'ostruct'
 
 class MockImportable < OpenStruct
-  include Importer::Importable
+  include Topographer::Importer::Importable
 
   def self.create(params)
     self.new(params)
@@ -21,7 +21,7 @@ class MockImportable < OpenStruct
   def self.get_mapper(strategy_class)
     case
     when  strategy_class == HashImportStrategy
-      Importer::Mapper.build_mapper(MockImportable) do |mapping|
+      Topographer::Importer::Mapper.build_mapper(MockImportable) do |mapping|
         mapping.required_mapping 'Field1', 'field_1'
         mapping.required_mapping 'Field2', 'field_2'
         mapping.optional_mapping 'Field3', 'field_3'
@@ -32,7 +32,7 @@ class MockImportable < OpenStruct
 
 end
 
-class HashImportStrategy < Importer::Strategy::Base
+class HashImportStrategy < Topographer::Importer::Strategy::Base
   attr_reader :imported_data
 
   def initialize(mapper)
@@ -71,14 +71,14 @@ class MockInput
   end
 
   def each
-    yield Importer::Input::SourceData.new('1', {'Field1' => 'datum1', 'Field2' => 'datum2'})
-    yield Importer::Input::SourceData.new('2', {'Field1' => 'datum2', 'Field2' => 'datum2', 'Field3' => 'datum3'})
-    yield Importer::Input::SourceData.new('3', {'Field1' => 'datum3', 'Field2' => 'invalid value!!!!1ONE'})  #I am INVALID!!!
-    yield Importer::Input::SourceData.new('4', {'Field1' => 'datum4', 'Field2' => 'datum2', 'Field3' => 'datum3', 'IgnoredField' => 'ignore me'})
+    yield Topographer::Importer::Input::SourceData.new('1', {'Field1' => 'datum1', 'Field2' => 'datum2'})
+    yield Topographer::Importer::Input::SourceData.new('2', {'Field1' => 'datum2', 'Field2' => 'datum2', 'Field3' => 'datum3'})
+    yield Topographer::Importer::Input::SourceData.new('3', {'Field1' => 'datum3', 'Field2' => 'invalid value!!!!1ONE'})  #I am INVALID!!!
+    yield Topographer::Importer::Input::SourceData.new('4', {'Field1' => 'datum4', 'Field2' => 'datum2', 'Field3' => 'datum3', 'IgnoredField' => 'ignore me'})
   end
 end
 
-describe Importer do
+describe Topographer::Importer do
   let(:input) { MockInput.new }
   let(:model_class) { MockImportable }
   let(:strategy_class) { HashImportStrategy }
@@ -87,8 +87,8 @@ describe Importer do
            get_header: ['BadCol1', 'BadCol2', 'Field1', 'Field3'],
            input_identifier: 'Test'
   end
-  let(:simple_logger) { Importer::Logger::Simple.new }
-  let(:import_log) { Importer.import_data(input, model_class, strategy_class, simple_logger) }
+  let(:simple_logger) { Topographer::Importer::Logger::Simple.new }
+  let(:import_log) { Topographer::Importer.import_data(input, model_class, strategy_class, simple_logger) }
 
   describe '.import_data' do
     it 'returns a logger instance' do
@@ -109,7 +109,7 @@ describe Importer do
     end
 
     it 'does not import data with an invalid header' do
-      import_log = Importer.import_data(bad_input, model_class, strategy_class, simple_logger)
+      import_log = Topographer::Importer.import_data(bad_input, model_class, strategy_class, simple_logger)
       expect(import_log.errors?).to be_true
       expect(import_log.fatal_error?).to be_true
       expect(import_log.fatal_errors.first.message).
@@ -118,7 +118,7 @@ describe Importer do
   end
   describe '.build_mapper' do
     it 'returns a mapper with the defined mappings' do
-      mapper = Importer.build_mapper(MockImportable) do |mapping|
+      mapper = Topographer::Importer.build_mapper(MockImportable) do |mapping|
           mapping.required_mapping 'Field1', 'field_1'
           mapping.required_mapping 'Field2', 'field_2'
           mapping.optional_mapping 'Field3', 'field_3'

@@ -1,24 +1,24 @@
 require 'spec_helper'
 
-describe Importer::Mapper do
+describe Topographer::Importer::Mapper do
   describe '.build_mapper' do
     describe 'required mappings' do
       it 'can require a one to one field mapping' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping 'Field1', 'field_1'
         end
         mapper.required_columns.should include("Field1")
         mapper.output_fields.should include('field_1')
       end
       it 'can require a many to one field mapping' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping ['Field1', 'Field2'], 'field_1'
         end
         mapper.required_columns.should include("Field1", "Field2")
         mapper.output_fields.should include('field_1')
       end
       it 'cannot require a one to many field mapping' do
-        expect { mapper = Importer::Mapper.build_mapper(Object) do |m|
+        expect { mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping 'Field1', ['field_1', 'field_2']
         end
         }.to raise_error(Topographer::InvalidMappingError)
@@ -26,21 +26,21 @@ describe Importer::Mapper do
     end
     describe 'optional mappings' do
       it 'can create an optional one to one field mapping' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping 'Field1', 'field_1'
         end
         mapper.optional_columns.should include("Field1")
         mapper.output_fields.should include('field_1')
       end
       it 'can create an optional many to one field mapping' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping ['Field1', 'Field2'], 'field_1'
         end
         mapper.optional_columns.should include("Field1", "Field2")
         mapper.output_fields.should include('field_1')
       end
       it 'cannot create an optional one to many field mapping' do
-        expect { mapper = Importer::Mapper.build_mapper(Object) do |m|
+        expect { mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping 'Field1', ['field_1', 'field_2']
         end
         }.to raise_error(Topographer::InvalidMappingError)
@@ -48,7 +48,7 @@ describe Importer::Mapper do
     end
     describe 'ignored mappings' do
       it 'can ignore a column' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.ignored_column 'Field1'
         end
         mapper.ignored_columns.should include('Field1')
@@ -56,21 +56,21 @@ describe Importer::Mapper do
       end
 
       it 'raises an error when adding a mapping whose output is already an output of another mapping' do
-        expect { Importer::Mapper.build_mapper(Object) do |m|
+        expect { Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping 'Field1', 'field_1'
           m.required_mapping 'Field2', 'field_1'
         end }.to raise_error(Topographer::InvalidMappingError)
       end
 
       it 'raises an error when adding a ignored column, which is already an input of another mapping' do
-        expect { Importer::Mapper.build_mapper(Object) do |m|
+        expect { Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping 'Field1', 'field_1'
           m.ignored_column 'Field1'
         end }.to raise_error(Topographer::InvalidMappingError)
       end
 
       it 'raises an error when adding a mapped column which has already been ignored' do
-        expect { Importer::Mapper.build_mapper(Object) do |m|
+        expect { Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.ignored_column 'Field1'
           m.optional_mapping 'Field1', 'field_1'
         end }.to raise_error(Topographer::InvalidMappingError)
@@ -79,7 +79,7 @@ describe Importer::Mapper do
 
     describe 'validation mappings' do
       it 'can create a single column validation' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.validation_field 'Field 1 Validation', 'Field1' do |input|
             raise 'No Input' unless input
           end
@@ -88,7 +88,7 @@ describe Importer::Mapper do
         expect(mapper.output_fields.empty?).to be_true
       end
       it 'can create a multicolumn validation' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.validation_field 'Multicolumn Validation', ['Field1', 'Field2'] do |input|
             raise 'No Input' unless input
           end
@@ -98,7 +98,7 @@ describe Importer::Mapper do
       end
       it 'raises an error if a validation name is repeated' do
         expect {
-          mapper = Importer::Mapper.build_mapper(Object) do |m|
+          mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
             m.validation_field 'Field 1 Validation', 'Field1' do |input|
               raise 'No Input' unless input
             end
@@ -110,7 +110,7 @@ describe Importer::Mapper do
 
     describe 'static mappings' do
       it 'can create a static mapping' do
-        mapper = Importer::Mapper.build_mapper(Object) do |m|
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.default_value 'Field1' do
             34
           end
@@ -119,14 +119,14 @@ describe Importer::Mapper do
         expect(mapper.output_fields).to eql(['Field1'])
       end
       it 'cannot create a static mapping to many columns' do
-        expect { mapper = Importer::Mapper.build_mapper(Object) do |m|
+        expect { mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.default_value ['Field1', 'Field2'] do
             34
           end
         end }.to raise_error(Topographer::InvalidMappingError)
       end
       it 'cannot add a static mapping to a field that has already been mapped' do
-        expect { mapper = Importer::Mapper.build_mapper(Object) do |m|
+        expect { mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping 'Field1', 'field1'
           m.default_value 'field1' do
             34
@@ -136,7 +136,7 @@ describe Importer::Mapper do
     end
 
     it 'associates the model class with the mapper instance' do
-      mapper = Importer::Mapper.build_mapper(Object) do |m|
+      mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
         m.ignored_column 'Field1'
         m.optional_mapping 'Field2', 'field_1'
       end
@@ -145,7 +145,7 @@ describe Importer::Mapper do
   end
 
   describe '#key_field' do
-    let(:mapper) { Importer::Mapper.new(Object) }
+    let(:mapper) { Topographer::Importer::Mapper.new(Object) }
     it 'should add a key field to the list of key fields' do
       mapper.key_field 'Field1'
       expect(mapper.key_fields).to eql(['Field1'])
@@ -165,7 +165,7 @@ describe Importer::Mapper do
 
   describe '#input_structure_valid?' do
     let(:mapper) do
-      Importer::Mapper.build_mapper(Object) do |m|
+      Topographer::Importer::Mapper.build_mapper(Object) do |m|
         m.required_mapping 'Field1', 'field1'
         m.required_mapping 'Field2', 'field_4'
         m.optional_mapping 'Field3', 'field_6'
@@ -203,7 +203,7 @@ describe Importer::Mapper do
 
   describe '#bad_columns' do
     let(:mapper) do
-      Importer::Mapper.build_mapper(Object) do |m|
+      Topographer::Importer::Mapper.build_mapper(Object) do |m|
         m.required_mapping 'Field1', 'field1'
         m.required_mapping 'Field2', 'field_4'
         m.validation_field('test validation 2', 'Field2') { |input| raise 'FAILURE' if !input }
@@ -222,7 +222,7 @@ describe Importer::Mapper do
 
   describe '#missing_columns' do
     let(:mapper) do
-      Importer::Mapper.build_mapper(Object) do |m|
+      Topographer::Importer::Mapper.build_mapper(Object) do |m|
         m.required_mapping 'Field1', 'field1'
         m.required_mapping 'Field2', 'field_4'
         m.optional_mapping 'Field3', 'field_6'
@@ -240,7 +240,7 @@ describe Importer::Mapper do
 
   describe '#map_input' do
     let(:mapper) do
-      Importer::Mapper.build_mapper(Object) do |m|
+      Topographer::Importer::Mapper.build_mapper(Object) do |m|
         m.required_mapping 'Field1', 'field_1'
         m.required_mapping ['Field1', 'Field2'], 'field_2'
         m.validation_field('Field2 Validation', 'Field2') { |input| raise 'FAILURE' if input['Field2'] != 'datum2'}

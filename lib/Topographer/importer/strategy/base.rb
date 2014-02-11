@@ -1,4 +1,4 @@
-class Importer::Strategy::Base
+class Topographer::Importer::Strategy::Base
 
   attr_reader :mapper
   attr_accessor :dry_run
@@ -27,7 +27,7 @@ class Importer::Strategy::Base
   private
 
     def get_import_status(mapping_result, new_model_errors)
-      status = Importer::Strategy::ImportStatus.new(mapping_result.source_identifier)
+      status = Topographer::Importer::Strategy::ImportStatus.new(mapping_result.source_identifier)
       mapping_result.errors.values.each do |error|
         status.add_error(:mapping, error)
       end

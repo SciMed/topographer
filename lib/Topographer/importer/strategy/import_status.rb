@@ -1,4 +1,4 @@
-class Importer::Strategy::ImportStatus
+class Topographer::Importer::Strategy::ImportStatus
   attr_reader :errors, :input_identifier, :timestamp
   attr_accessor :message
 

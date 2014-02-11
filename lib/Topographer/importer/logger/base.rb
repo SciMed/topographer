@@ -1,4 +1,4 @@
-class Importer::Logger::Base
+class Topographer::Importer::Logger::Base
 
   attr_reader :fatal_errors
 
@@ -31,7 +31,7 @@ class Importer::Logger::Base
   end
 
   def log_fatal(source, message)
-    @fatal_errors << Importer::Logger::FatalErrorEntry.new(source, message)
+    @fatal_errors << Topographer::Importer::Logger::FatalErrorEntry.new(source, message)
   end
 
   def successful_imports

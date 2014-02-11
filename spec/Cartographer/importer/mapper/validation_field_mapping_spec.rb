@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Importer::Mapper::ValidationFieldMapping do
+describe Topographer::Importer::Mapper::ValidationFieldMapping do
   let(:validation_mapping) do
-    Importer::Mapper::ValidationFieldMapping.new('test mapping', ['field1', 'field2', 'field3']) do |input|
+    Topographer::Importer::Mapper::ValidationFieldMapping.new('test mapping', ['field1', 'field2', 'field3']) do |input|
       sum = input.values.flatten.inject(0) {|sum, x| sum+x}
       raise 'Sum must be 15' if sum != 15
     end
@@ -13,10 +13,10 @@ describe Importer::Mapper::ValidationFieldMapping do
   let(:invalid_input) do
     {'field1' => 3, 'field2' => 4, 'field3' => 5}
   end
-  let(:result) { Importer::Mapper::Result.new('test') }
+  let(:result) { Topographer::Importer::Mapper::Result.new('test') }
   describe '#initialize' do
     it 'should not create a validation mapping without a behavior block' do
-      expect { Importer::Mapper::ValidationFieldMapping.new('test mapping', ['field1', 'field2', 'field3']) }.
+      expect { Topographer::Importer::Mapper::ValidationFieldMapping.new('test mapping', ['field1', 'field2', 'field3']) }.
         to raise_error(Topographer::InvalidMappingError)
     end
   end
@@ -32,7 +32,7 @@ describe Importer::Mapper::ValidationFieldMapping do
       expect(result.errors.values).to include('Sum must be 15')
     end
     it 'should not rescue Exceptions that do not inherit from standard error' do
-      mapper = Importer::Mapper::ValidationFieldMapping.new('test mapping', ['field1', 'field2', 'field3']) do |input|
+      mapper = Topographer::Importer::Mapper::ValidationFieldMapping.new('test mapping', ['field1', 'field2', 'field3']) do |input|
         sum = input.values.flatten.inject(0) {|sum, x| sum+x}
         raise Exception, 'Sum must be 15' if sum != 15
       end

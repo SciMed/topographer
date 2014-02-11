@@ -22,7 +22,7 @@ class MappedModel < OpenStruct
   end
 
   def self.get_mapper
-    Importer::Mapper.build_mapper(MappedModel) do |mapping|
+    Topographer::Importer::Mapper.build_mapper(MappedModel) do |mapping|
       mapping.required_mapping 'Field1', 'field_1'
       mapping.required_mapping 'Field2', 'field_2'
       mapping.optional_mapping 'Field3', 'field_3'

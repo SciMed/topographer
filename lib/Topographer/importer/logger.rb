@@ -1,4 +1,4 @@
-class Importer::Logger
+class Topographer::Importer::Logger
   require_relative 'logger/base'
   require_relative 'logger/simple'
   require_relative 'logger/file'

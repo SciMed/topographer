@@ -1,4 +1,4 @@
-class Importer
+class Topographer::Importer
   require_relative 'importer/mapper'
   require_relative 'importer/strategy'
   require_relative 'importer/importable'

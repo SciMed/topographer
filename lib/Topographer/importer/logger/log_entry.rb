@@ -1,4 +1,4 @@
-class Importer::Logger::LogEntry
+class Topographer::Importer::Logger::LogEntry
   attr_reader :input_identifier,
               :model_name
 

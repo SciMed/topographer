@@ -1,4 +1,4 @@
-module Importer::Helpers
+module Topographer::Importer::Helpers
   require_relative 'helpers/write_log_to_csv'
 
   def boolify(word)

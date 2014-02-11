@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-describe Importer::Helpers::WriteLogToCSV do
+describe Topographer::Importer::Helpers::WriteLogToCSV do
   let(:successful_entry) do
-    status = Importer::Strategy::ImportStatus.new('test-input')
+    status = Topographer::Importer::Strategy::ImportStatus.new('test-input')
     status.set_timestamp
-    Importer::Logger::LogEntry.new('test-input', 'TestModel', status)
+    Topographer::Importer::Logger::LogEntry.new('test-input', 'TestModel', status)
   end
   let(:failed_entry) do
-    status = Importer::Strategy::ImportStatus.new('test-input')
+    status = Topographer::Importer::Strategy::ImportStatus.new('test-input')
     status.set_timestamp
     (1+rand(6)).times do |n|
       status.add_error(:mapping, "Test error #{n}")
     end
-    Importer::Logger::LogEntry.new('test-input', 'TestModel', status)
+    Topographer::Importer::Logger::LogEntry.new('test-input', 'TestModel', status)
   end
   let(:fatal_error) do
-    Importer::Logger::FatalErrorEntry.new('test-input', 'FATAL ERROR')
+    Topographer::Importer::Logger::FatalErrorEntry.new('test-input', 'FATAL ERROR')
   end
   let(:successes) do
     successes = []
@@ -57,13 +57,13 @@ describe Importer::Helpers::WriteLogToCSV do
       file = double('file')
       CSV.should_receive(:open).with('fake_file_path', 'wb').and_yield(file)
       file.should_receive(:<<).exactly(12).times
-      Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(logger, 'fake_file_path', write_all: true)
+      Topographer::Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(logger, 'fake_file_path', write_all: true)
     end
     it 'should only write failures and fatal errors if write_all is false' do
       file = double('file')
       CSV.should_receive(:open).with('fake_file_path', 'wb').and_yield(file)
       file.should_receive(:<<).exactly(10).times
-      Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(logger, 'fake_file_path', write_all: false)
+      Topographer::Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(logger, 'fake_file_path', write_all: false)
     end
   end
 end

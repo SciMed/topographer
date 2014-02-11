@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 class TestImportable
-  extend Importer::Helpers
+  extend Topographer::Importer::Helpers
 end
 
-describe Importer::Helpers do
+describe Topographer::Importer::Helpers do
   describe ".boolify" do
     it "returns true if given 'Yes'" do
       expect(TestImportable.boolify('Yes')).to eql true

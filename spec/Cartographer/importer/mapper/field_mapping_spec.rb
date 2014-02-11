@@ -1,25 +1,25 @@
 require 'spec_helper'
 
-describe Importer::Mapper::FieldMapping do
-  let(:required_simple_mapping) { Importer::Mapper::FieldMapping.new(true, ['field1'], 'output_column') }
+describe Topographer::Importer::Mapper::FieldMapping do
+  let(:required_simple_mapping) { Topographer::Importer::Mapper::FieldMapping.new(true, ['field1'], 'output_column') }
   let(:required_simple_mapping_with_validation) do
-    Importer::Mapper::FieldMapping.new(true, ['field1'], 'output_column') do |input|
+    Topographer::Importer::Mapper::FieldMapping.new(true, ['field1'], 'output_column') do |input|
       if input['field1'] != 4
         raise 'Field1 MUST BE 4'
       end
     end
   end
   let(:required_complex_mapping) do
-    Importer::Mapper::FieldMapping.new(true, ['field1', 'field2', 'field3'], 'output_column') do |input|
+    Topographer::Importer::Mapper::FieldMapping.new(true, ['field1', 'field2', 'field3'], 'output_column') do |input|
       if input['field1'] != 4
         raise 'Field1 MUST BE 4'
       end
       input.values.flatten.inject(0) {|sum, x| sum+x}
     end
   end
-  let(:optional_simple_mapping) { Importer::Mapper::FieldMapping.new(false, 'field1', 'output_column') }
+  let(:optional_simple_mapping) { Topographer::Importer::Mapper::FieldMapping.new(false, 'field1', 'output_column') }
   let(:optional_complex_mapping) do
-    Importer::Mapper::FieldMapping.new(false, ['field1', 'field2', 'field3'], 'output_column') do |input|
+    Topographer::Importer::Mapper::FieldMapping.new(false, ['field1', 'field2', 'field3'], 'output_column') do |input|
       if input['field1'] != 4
         raise 'Field1 MUST BE 4'
       end
@@ -32,7 +32,7 @@ describe Importer::Mapper::FieldMapping do
   let(:invalid_complex_input) do
     {'field1' => 3, 'field2' => 4, 'field3' => 5}
   end
-  let(:result) { Importer::Mapper::Result.new('test') }
+  let(:result) { Topographer::Importer::Mapper::Result.new('test') }
   describe '#process_input' do
     context 'required mappings' do
       it 'maps required simple mappings when input is valid' do
@@ -116,7 +116,7 @@ describe Importer::Mapper::FieldMapping do
       expect(result.data['output_column']).to eql(false)
     end
     it 'should not rescue Exceptions that do not inherit from standard error' do
-      mapper = Importer::Mapper::FieldMapping.new(true, 'field1', 'output_column') do |input|
+      mapper = Topographer::Importer::Mapper::FieldMapping.new(true, 'field1', 'output_column') do |input|
         raise Exception, 'Field1 MUST BE 4'
       end
       expect{ mapper.process_input({'field1' => false}, result) }.to raise_error(Exception)

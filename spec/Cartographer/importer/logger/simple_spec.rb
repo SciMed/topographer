@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Importer::Logger::Simple do
+describe Topographer::Importer::Logger::Simple do
 
   let(:logger) do
-    Importer::Logger::Simple.new
+    Topographer::Importer::Logger::Simple.new
   end
 
   describe '#log_success' do

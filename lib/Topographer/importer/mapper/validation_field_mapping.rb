@@ -1,4 +1,4 @@
-class Importer::Mapper::ValidationFieldMapping < Importer::Mapper::FieldMapping
+class Topographer::Importer::Mapper::ValidationFieldMapping < Topographer::Importer::Mapper::FieldMapping
   attr_reader :name
 
   def initialize(name, input_columns, &validation_block)

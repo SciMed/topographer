@@ -1,6 +1,6 @@
 require 'active_support/core_ext/hash'
 require 'active_support/core_ext/object/blank'
-class Importer::Mapper::FieldMapping
+class Topographer::Importer::Mapper::FieldMapping
   attr_reader :input_columns, :output_field
 
   def initialize(required, input_columns, output_field, &mapping_behavior)

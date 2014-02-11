@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'ostruct'
 require_relative 'mapped_model'
 
-describe Importer::Strategy::UpdateRecord do
+describe Topographer::Importer::Strategy::UpdateRecord do
 
-  let(:strategy) { Importer::Strategy::UpdateRecord.new(MappedModel.get_mapper) }
+  let(:strategy) { Topographer::Importer::Strategy::UpdateRecord.new(MappedModel.get_mapper) }
   let(:input) do
     double 'Data',
            source_identifier: 'record',
@@ -19,7 +19,7 @@ describe Importer::Strategy::UpdateRecord do
 
   describe '#import_record' do
     it 'should return an ImportStatus object' do
-      expect(strategy.import_record(input)).to be_a Importer::Strategy::ImportStatus
+      expect(strategy.import_record(input)).to be_a Topographer::Importer::Strategy::ImportStatus
     end
     it 'should import a record from valid input' do
       MappedModel.any_instance.should_receive(:save).once

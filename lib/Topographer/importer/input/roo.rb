@@ -1,4 +1,4 @@
-class Importer::Input::Roo < Importer::Input::Base
+class Topographer::Importer::Input::Roo < Topographer::Importer::Input::Base
   include Enumerable
 
   def initialize(roo_sheet, header_row=1, data_row=2)
@@ -21,7 +21,7 @@ class Importer::Input::Roo < Importer::Input::Base
     @start_data_row.upto @end_data_row do |row_number|
       data = @sheet.row(row_number)
       source_identifier = "Row: #{row_number}"
-      yield Importer::Input::SourceData.new(source_identifier,
+      yield Topographer::Importer::Input::SourceData.new(source_identifier,
                                             Hash[@header.zip(data)])
     end
   end

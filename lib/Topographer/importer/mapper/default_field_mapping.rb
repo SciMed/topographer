@@ -1,4 +1,4 @@
-class Importer::Mapper::DefaultFieldMapping < Importer::Mapper::FieldMapping
+class Topographer::Importer::Mapper::DefaultFieldMapping < Topographer::Importer::Mapper::FieldMapping
 
   def initialize(output_column, &output_block)
     unless block_given?

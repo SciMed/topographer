@@ -1,4 +1,4 @@
-class Importer::Mapper::IgnoredFieldMapping < Importer::Mapper::FieldMapping
+class Topographer::Importer::Mapper::IgnoredFieldMapping < Topographer::Importer::Mapper::FieldMapping
   def initialize(input_columns)
     @input_columns = input_columns
     @output_field = nil

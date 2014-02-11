@@ -1,22 +1,22 @@
 require 'spec_helper'
 
-describe Importer::Mapper::DefaultFieldMapping do
+describe Topographer::Importer::Mapper::DefaultFieldMapping do
   let(:static_mapping) do
-    Importer::Mapper::DefaultFieldMapping.new('field1') do
+    Topographer::Importer::Mapper::DefaultFieldMapping.new('field1') do
       10+5
     end
   end
   let(:failed_static_mapping) do
-    Importer::Mapper::DefaultFieldMapping.new('field1') do
+    Topographer::Importer::Mapper::DefaultFieldMapping.new('field1') do
       raise 'FAILURE'
     end
   end
 
-  let(:result) { Importer::Mapper::Result.new('test') }
-  let(:result2) { Importer::Mapper::Result.new('test') }
+  let(:result) { Topographer::Importer::Mapper::Result.new('test') }
+  let(:result2) { Topographer::Importer::Mapper::Result.new('test') }
   describe '#initialize' do
     it 'should not create a static mapping without a behavior block' do
-      expect { Importer::Mapper::DefaultFieldMapping.new('broken mapping') }.
+      expect { Topographer::Importer::Mapper::DefaultFieldMapping.new('broken mapping') }.
           to raise_error(Topographer::InvalidMappingError)
     end
   end
@@ -32,7 +32,7 @@ describe Importer::Mapper::DefaultFieldMapping do
       expect(result.errors.values).to include('FAILURE')
     end
     it 'should not rescue Exceptions that do not inherit from standard error' do
-      mapper = Importer::Mapper::DefaultFieldMapping.new('output_column') do
+      mapper = Topographer::Importer::Mapper::DefaultFieldMapping.new('output_column') do
         raise Exception, 'Field1 MUST BE 4'
       end
       expect{ mapper.process_input({'field1' => false}, result) }.to raise_error(Exception)

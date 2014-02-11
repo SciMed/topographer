@@ -1,4 +1,4 @@
-class Importer::Mapper::Result
+class Topographer::Importer::Mapper::Result
   attr_reader :data, :errors, :source_identifier
 
   def initialize(source_identifier)

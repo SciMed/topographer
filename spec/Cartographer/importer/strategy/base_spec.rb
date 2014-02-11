@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Importer::Strategy::Base do
+describe Topographer::Importer::Strategy::Base do
   let(:mapper) do
     double('Mapper')
   end
-  let(:strategy) { Importer::Strategy::Base.new(mapper) }
+  let(:strategy) { Topographer::Importer::Strategy::Base.new(mapper) }
   let(:status) do
     double 'Status',
            errors?: false
@@ -15,7 +15,7 @@ describe Importer::Strategy::Base do
   end
   describe '#initialize' do
     it 'creates a new Strategy instance with the given mapper' do
-      strategy = Importer::Strategy::Base.new(mapper)
+      strategy = Topographer::Importer::Strategy::Base.new(mapper)
       strategy.instance_variable_get(:@mapper).should be(mapper)
     end
   end

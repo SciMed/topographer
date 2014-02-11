@@ -1,4 +1,4 @@
-class Importer::Strategy::ImportNewRecord < Importer::Strategy::Base
+class Topographer::Importer::Strategy::ImportNewRecord < Topographer::Importer::Strategy::Base
 
   def import_record (source_data)
     mapping_result = mapper.map_input(source_data)

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'ostruct'
 require_relative 'mapped_model'
 
-describe Importer::Strategy::ImportNewRecord do
+describe Topographer::Importer::Strategy::ImportNewRecord do
   let(:valid_status) do
     double 'Result',
            source_identifier: 'row1',
@@ -22,7 +22,7 @@ describe Importer::Strategy::ImportNewRecord do
     double('Mapper', map_input: valid_status, model_class: MappedModel)
   end
 
-  let(:strategy) { Importer::Strategy::ImportNewRecord.new(MappedModel.get_mapper) }
+  let(:strategy) { Topographer::Importer::Strategy::ImportNewRecord.new(MappedModel.get_mapper) }
   let(:input) do
     double 'Data',
            source_identifier: 'record',
@@ -32,14 +32,14 @@ describe Importer::Strategy::ImportNewRecord do
 
   describe '#initialize' do
     it 'creates a new Strategy instance with the given mapper' do
-      strategy = Importer::Strategy::ImportNewRecord.new(mapper)
+      strategy = Topographer::Importer::Strategy::ImportNewRecord.new(mapper)
       strategy.instance_variable_get(:@mapper).should be(mapper)
     end
   end
 
   describe '#import_record' do
     it 'should return an ImportStatus object' do
-      expect(strategy.import_record(input)).to be_a Importer::Strategy::ImportStatus
+      expect(strategy.import_record(input)).to be_a Topographer::Importer::Strategy::ImportStatus
     end
     it 'should import a record from valid input' do
       MappedModel.any_instance.should_receive(:save).once
@@ -48,7 +48,7 @@ describe Importer::Strategy::ImportNewRecord do
     end
     it 'should not import a record from invalid input' do
       mapper.stub(:map_input).and_return(invalid_result)
-      strategy = Importer::Strategy::ImportNewRecord.new(mapper)
+      strategy = Topographer::Importer::Strategy::ImportNewRecord.new(mapper)
       MappedModel.any_instance.should_not_receive(:save)
       import_status = strategy.import_record(input)
       expect(import_status.errors?).to be true

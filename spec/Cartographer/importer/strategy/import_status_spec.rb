@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Importer::Strategy::ImportStatus do
-  let(:status) {Importer::Strategy::ImportStatus.new('row1')}
+describe Topographer::Importer::Strategy::ImportStatus do
+  let(:status) {Topographer::Importer::Strategy::ImportStatus.new('row1')}
   describe '#add_error' do
     it 'should add errors' do
       status.add_error(:validation, 'ERROR')

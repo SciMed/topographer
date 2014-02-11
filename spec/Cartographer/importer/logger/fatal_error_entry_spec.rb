@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Importer::Logger::FatalErrorEntry do
-  let(:entry) { Importer::Logger::FatalErrorEntry.new('test-input', 'failure message') }
+describe Topographer::Importer::Logger::FatalErrorEntry do
+  let(:entry) { Topographer::Importer::Logger::FatalErrorEntry.new('test-input', 'failure message') }
   describe '#failure?' do
     it 'should return true' do
       expect(entry.failure?).to be_true

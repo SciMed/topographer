@@ -1,4 +1,4 @@
-class Importer::Logger::Simple < Importer::Logger::Base
+class Topographer::Importer::Logger::Simple < Topographer::Importer::Logger::Base
 
   attr_reader :successes, :failures
 

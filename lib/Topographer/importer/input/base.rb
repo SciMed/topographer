@@ -1,4 +1,4 @@
-class Importer::Input::Base
+class Topographer::Importer::Input::Base
   def get_header
     raise NotImplementedError
   end

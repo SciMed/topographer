@@ -1,4 +1,4 @@
-class Importer::Mapper
+class Topographer::Importer::Mapper
   require_relative 'mapper/field_mapping'
   require_relative 'mapper/ignored_field_mapping'
   require_relative 'mapper/validation_field_mapping'
