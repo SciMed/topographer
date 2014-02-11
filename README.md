@@ -1,4 +1,4 @@
-# Topographer
+# Topographer [![Gem Version](https://badge.fury.io/rb/topographer.png)](http://badge.fury.io/rb/topographer)
 
 Topographer is a gem that provides functionality to conveniently import from various data sources into
 ActiveRecord or other ORM systems.  This accomplished by defining an input wrapper, a mapping from input data to
