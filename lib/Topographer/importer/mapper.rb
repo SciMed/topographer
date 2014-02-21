@@ -30,19 +30,24 @@ class Topographer::Importer::Mapper
     @model_class = model_class
   end
 
-  def input_structure_valid?(input_columns)
+  def input_structure_valid?(input_columns, options={})
+    ignore_unmapped_columns = options.fetch(:ignore_unmapped_columns, false)
     @bad_columns ||= input_columns - mapped_input_columns
     @missing_columns ||= required_input_columns - input_columns
-    @bad_columns.empty? && @missing_columns.empty?
+
+    if ignore_unmapped_columns
+      @missing_columns.empty?
+    else
+      @bad_columns.empty? && @missing_columns.empty?
+    end
   end
 
   def map_input(source_data)
     mapping_result = Result.new(source_data.source_identifier)
 
-    if ( source_data.empty? )
+    if source_data.empty?
       handle_no_data(mapping_result)
     else
-
       @validation_mappings.values.each do |validation_field_mapping|
         validation_field_mapping.process_input(source_data.data, mapping_result)
       end

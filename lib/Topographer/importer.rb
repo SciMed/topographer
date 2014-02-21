@@ -13,15 +13,18 @@ class Topographer::Importer
   end
 
   def self.import_data(input, import_class, strategy_class, logger, options = {})
-    dry_run = options.fetch(:dry_run, false)
-    importer = new(input, import_class, strategy_class, logger, dry_run)
+    importer = new(input, import_class, strategy_class, logger, options)
     importer.logger
   end
 
-  def initialize(input, import_class, strategy_class, logger, dry_run)
+  def initialize(input, import_class, strategy_class, logger, options = {})
     @logger = logger
+
+    dry_run = options.fetch(:dry_run, false)
+    ignore_unmapped_columns = options.fetch(:ignore_unmapped_columns, false)
+
     mapper = import_class.get_mapper(strategy_class)
-    valid_header = mapper.input_structure_valid?(input.get_header)
+    valid_header = mapper.input_structure_valid?(input.get_header, ignore_unmapped_columns: ignore_unmapped_columns)
 
     if valid_header
       strategy = strategy_class.new(mapper)

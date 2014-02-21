@@ -185,7 +185,8 @@ describe Topographer::Importer::Mapper do
     let(:valid_input_structure_without_options) { ['Field1', 'Field2', 'Field4'] }
     let(:missing_required_column_structure) { ['Field1', 'Field3'] }
     let(:missing_validation_column_structure) { ['Field1', 'Field2', 'Field3'] }
-    let(:bad_column_structure) { ['Field1', 'UnknownField', 'Field2', 'Field4'] }
+    let(:bad_column_structure) { ['Field1', 'UnknownField', 'Field4'] }
+    let(:unmapped_column_structure) {['Field1', 'Field2', 'Field3', 'Field4', 'UnmappedField'] }
 
     it 'returns false if required fields are missing' do
       expect(mapper.input_structure_valid?(missing_required_column_structure)).to be_false
@@ -203,8 +204,18 @@ describe Topographer::Importer::Mapper do
       expect(mapper.input_structure_valid?(valid_input_structure_with_options)).to be_true
       expect(mapper.input_structure_valid?(valid_input_structure_with_options+['Field5'])).to be_true
     end
-    it 'returns false if there are any extra fields that have not been ignored' do
-      mapper.input_structure_valid?(bad_column_structure).should be_false
+    context 'not ignoring unmapped columns' do
+      it 'returns false if there are any extra fields that have not been ignored' do
+        expect(mapper.input_structure_valid?(bad_column_structure)).to be_false
+      end
+    end
+    context 'ignoring unmapped columns' do
+      it 'returns false if there are any extra fields that have not been ignored and required fields are missing' do
+        expect(mapper.input_structure_valid?(bad_column_structure, ignore_unmapped_columns: true)).to be_false
+      end
+      it 'returns true if there are any extra fields that have not been ignored but all required fields are present' do
+        expect(mapper.input_structure_valid?(unmapped_column_structure, ignore_unmapped_columns: true)).to be_true
+      end
     end
   end
 

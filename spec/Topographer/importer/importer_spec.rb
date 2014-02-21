@@ -115,6 +115,17 @@ describe Topographer::Importer do
       expect(import_log.fatal_errors.first.message).
         to match(/Invalid Input Header.+Missing Columns:\s+Field2.+Invalid Columns:\s+BadCol1.+BadCol2/)
     end
+
+    it 'does import data with umapped columns when ignoring unmapped columns' do
+      extra_column_input = input
+      extra_column_input.stub(:get_header) { %w(Field1 Field2 Field3 UnknownField1) }
+
+      import_log = Topographer::Importer.import_data(extra_column_input, model_class, strategy_class, simple_logger, ignore_unmapped_columns: true)
+
+      expect(import_log.fatal_error?).to be_false
+      expect(import_log.total_imports).to be 4
+      expect(import_log.successful_imports).to be 3
+    end
   end
   describe '.build_mapper' do
     it 'returns a mapper with the defined mappings' do
