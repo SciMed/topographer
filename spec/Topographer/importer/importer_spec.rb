@@ -124,9 +124,9 @@ describe Topographer::Importer do
           mapping.optional_mapping 'Field3', 'field_3'
           mapping.ignored_column 'IgnoredField'
       end
-      expect(mapper.required_columns).to eql(['Field1', 'Field2'])
-      expect(mapper.optional_columns).to eql(['Field3'])
-      expect(mapper.ignored_columns).to eql(['IgnoredField'])
+      expect(mapper.required_mapping_columns).to eql(['Field1', 'Field2'])
+      expect(mapper.optional_mapping_columns).to eql(['Field3'])
+      expect(mapper.ignored_mapping_columns).to eql(['IgnoredField'])
     end
   end
 end

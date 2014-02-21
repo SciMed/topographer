@@ -27,7 +27,8 @@ describe Topographer::Importer::Strategy::ImportNewRecord do
     double 'Data',
            source_identifier: 'record',
            data: {'Field1' => 'datum1',
-                  'Field2' => 'datum2'}
+                  'Field2' => 'datum2'},
+           empty?: false
   end
 
   describe '#initialize' do

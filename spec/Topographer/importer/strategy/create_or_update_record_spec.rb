@@ -9,12 +9,14 @@ describe Topographer::Importer::Strategy::CreateOrUpdateRecord do
     double 'Data',
            source_identifier: 'record',
            data: {'Field1' => 'datum1',
-                  'Field2' => 'datum2'}
+                  'Field2' => 'datum2'},
+           empty?: false
   end
   let(:invalid_input) do
     double 'Data',
            source_identifier: 'bad record',
-           data: {'Field1' => 'datum1'}
+           data: {'Field1' => 'datum1'},
+           empty?: false
   end
 
 

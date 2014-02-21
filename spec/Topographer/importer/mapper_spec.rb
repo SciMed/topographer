@@ -7,14 +7,14 @@ describe Topographer::Importer::Mapper do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping 'Field1', 'field_1'
         end
-        mapper.required_columns.should include("Field1")
+        mapper.required_mapping_columns.should include("Field1")
         mapper.output_fields.should include('field_1')
       end
       it 'can require a many to one field mapping' do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping ['Field1', 'Field2'], 'field_1'
         end
-        mapper.required_columns.should include("Field1", "Field2")
+        mapper.required_mapping_columns.should include("Field1", "Field2")
         mapper.output_fields.should include('field_1')
       end
       it 'cannot require a one to many field mapping' do
@@ -29,14 +29,14 @@ describe Topographer::Importer::Mapper do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping 'Field1', 'field_1'
         end
-        mapper.optional_columns.should include("Field1")
+        mapper.optional_mapping_columns.should include("Field1")
         mapper.output_fields.should include('field_1')
       end
       it 'can create an optional many to one field mapping' do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping ['Field1', 'Field2'], 'field_1'
         end
-        mapper.optional_columns.should include("Field1", "Field2")
+        mapper.optional_mapping_columns.should include("Field1", "Field2")
         mapper.output_fields.should include('field_1')
       end
       it 'cannot create an optional one to many field mapping' do
@@ -51,7 +51,7 @@ describe Topographer::Importer::Mapper do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.ignored_column 'Field1'
         end
-        mapper.ignored_columns.should include('Field1')
+        mapper.ignored_mapping_columns.should include('Field1')
         mapper.output_fields.should be_empty
       end
 
@@ -84,7 +84,7 @@ describe Topographer::Importer::Mapper do
             raise 'No Input' unless input
           end
         end
-        expect(mapper.validation_columns).to include('Field1')
+        expect(mapper.validation_mapping_columns).to include('Field1')
         expect(mapper.output_fields.empty?).to be_true
       end
       it 'can create a multicolumn validation' do
@@ -93,7 +93,7 @@ describe Topographer::Importer::Mapper do
             raise 'No Input' unless input
           end
         end
-        expect(mapper.validation_columns).to eql(['Field1', 'Field2'])
+        expect(mapper.validation_mapping_columns).to eql(['Field1', 'Field2'])
         expect(mapper.output_fields.empty?).to be_true
       end
       it 'raises an error if a validation name is repeated' do
@@ -133,6 +133,32 @@ describe Topographer::Importer::Mapper do
           end
         end }.to raise_error(Topographer::InvalidMappingError)
       end
+
+
+    end
+
+    describe 'key field mappings' do
+      it 'should add a key field to the list of key fields' do
+        mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
+          m.key_field 'Field1'
+        end
+        expect(mapper.key_fields).to eql(['Field1'])
+      end
+      it 'should not allow multiple key fields at one time' do
+        expect {
+          mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
+            m.key_field ['Field1', 'Field2']
+          end
+        }.to raise_error(Topographer::InvalidMappingError)
+      end
+      it 'should not allow the same key field more than once' do
+        expect {
+          mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
+            m.key_field 'Field1'
+            m.key_field 'Field1'
+          end
+        }.to raise_error(Topographer::InvalidMappingError)
+      end
     end
 
     it 'associates the model class with the mapper instance' do
@@ -141,25 +167,6 @@ describe Topographer::Importer::Mapper do
         m.optional_mapping 'Field2', 'field_1'
       end
       expect(mapper.model_class).to be Object
-    end
-  end
-
-  describe '#key_field' do
-    let(:mapper) { Topographer::Importer::Mapper.new(Object) }
-    it 'should add a key field to the list of key fields' do
-      mapper.key_field 'Field1'
-      expect(mapper.key_fields).to eql(['Field1'])
-    end
-    it 'should not allow multiple key fields at one time' do
-      expect {
-        mapper.key_field ['Field1', 'Field2']
-      }.to raise_error(Topographer::InvalidMappingError)
-    end
-    it 'should not allow the same key field more than once' do
-      expect {
-        mapper.key_field 'Field1'
-        mapper.key_field 'Field1'
-      }.to raise_error(Topographer::InvalidMappingError)
     end
   end
 
@@ -255,7 +262,8 @@ describe Topographer::Importer::Mapper do
              source_identifier: 'row1',
              data: {'Field1' => 'datum1',
                     'Field2' => 'datum2',
-                    'Field3' => 6}
+                    'Field3' => 6},
+             empty?: false
     end
 
     let(:invalid_data_input) do
@@ -263,14 +271,23 @@ describe Topographer::Importer::Mapper do
              source_identifier: 'row1',
              data: {'Field1' => 'datum1',
                     'Field2' => 'bad_field2_data',
-                    'Field3' => 6}
+                    'Field3' => 6},
+             empty?: false
     end
 
     let(:missing_field_input) do
       double 'SourceData',
              source_identifier: 'row1',
              data: {'Field1' => 'datum1',
-                    'Field2' => 'datum2'}
+                    'Field2' => 'datum2'},
+             empty?: false
+    end
+
+    let(:empty_input) do
+      double 'SourceData',
+             source_identifier: 'row1',
+             data: {},
+             empty?: true
     end
 
     let(:result) do
@@ -313,6 +330,12 @@ describe Topographer::Importer::Mapper do
 
     it 'does not return an error if an optional field is missing in the input data' do
       expect(result.errors?).to be_false
+    end
+
+    it 'returns a `blank row` error if an entire row is blank' do
+      empty_result = mapper.map_input(empty_input)
+      expect(empty_result.errors?).to be_true
+      expect(empty_result.errors['EmptyRow']).to include('empty row')
     end
   end
 end

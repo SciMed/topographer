@@ -5,4 +5,8 @@ class Topographer::Importer::Input::SourceData
     @source_identifier = source_identifier
     @data = data
   end
+
+  def empty?
+    @data.empty?
+  end
 end
