@@ -3,6 +3,7 @@
 .bundle
 .config
 .yardoc
+.flooignore
 Gemfile.lock
 InstalledFiles
 _yardoc
