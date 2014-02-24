@@ -11,7 +11,7 @@ ActiveRecord or other ORM systems.  This accomplished by defining an input wrapp
 
 Add this line to your application's Gemfile:
 
-    gem 'Topographer'
+    gem 'topographer'
 
 And then execute:
 
@@ -19,7 +19,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install Topographer
+    $ gem install topographer
 
 ## Usage
 
