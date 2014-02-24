@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in Topographer.gemspec
+# Specify your gem's dependencies in topographer.gemspec
 gemspec

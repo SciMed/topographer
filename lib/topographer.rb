@@ -1,6 +1,6 @@
-require 'Topographer/version'
+require 'topographer/version'
 
 module Topographer
-  require 'Topographer/exceptions'
-  require 'Topographer/importer'
+  require 'topographer/exceptions'
+  require 'topographer/importer'
 end
