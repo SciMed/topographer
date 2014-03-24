@@ -1,0 +1,7 @@
+<% config[:namespace_files].each do |strategy_file| %>
+  require_relative '<%= strategy_file %>'
+<% end %>
+module Imports
+  module <%= config[:module_name] %>
+  end
+end
