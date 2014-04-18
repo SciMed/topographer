@@ -3,7 +3,17 @@ class Imports::UserInterfaceImport
 
   def self.import_spreadsheet(upload, import_runner_class, import_class, options = {})
     file = store_upload(upload)
-    run_import(file, import_class, import_runner_class, options)
+
+    logger = nil
+    ActiveRecord.transaction do
+      logger = run_import(file, import_class, import_runner_class, options)
+
+      if logger.errors?
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    logger
   end
 
   def self.store_upload(upload, options={})
