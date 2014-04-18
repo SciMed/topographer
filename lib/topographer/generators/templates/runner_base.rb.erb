@@ -1,0 +1,79 @@
+module Imports
+  module Runners
+    class Base
+
+      attr_reader :log_name
+
+      def self.included(base)
+        base.class_eval do
+          def run(file, import_class, options={})
+            runner = new(file, import_class, options)
+            execute_options = options.fetch(:execute_options, {})
+            log = runner.execute(execute_options)
+            log
+          end
+        end
+      end
+
+      def execute(options = {})
+
+        import_options = options.merge(dry_run: @dry_run)
+
+        if importable?
+          @sheet_names.each do |sheet_name|
+            data_sheet = @spreadsheet.sheet(sheet_name)
+            #Roo input is the default for importing spreadsheets.  If you need another import type feel free
+            #to change this
+            data_input = Topographer::Importer::Input::Roo.new(data_sheet, @header_row, @data_start)
+            Topographer::Importer.import_data(data_input, @import_class, @strategy_class, @logger, import_options)
+          end
+        end
+
+        Topographer::Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(@logger, log_name)
+
+        @logger
+      end
+
+      def importable?
+        @importable
+      end
+
+      private
+
+        def log_file_name(import_name)
+          now = DateTime.now.strftime('%Y-%m-%d-%H-%M-%S')
+          dry_string = (@dry_run) ? '_dry' : ''
+          import_name = import_name.gsub(/\s+/, '_')
+          File.join(log_root, "log/#{import_name}_log#{dry_string}-#{now}.csv")
+        end
+
+        def setup_runner(file, import_name, options={})
+          @dry_run = options.fetch(:dry_run, false)
+
+          @sheet_names = options.fetch(:sheets, ['Sheet1'])
+          @header_row = options.fetch(:header, 1)
+          @data_start = options.fetch(:data_start, 2)
+
+          @log_name = log_file_name(import_name)
+          @logger = Topographer::Importer::Logger::Simple.new
+
+          @importable = true
+
+          begin
+            @spreadsheet = Roo::Excelx.new(File.expand_path(file))
+
+          rescue TypeError
+            @importable = false
+            @logger.log_fatal('File open failure', "Unable to open file #{file} for import #{import_name}.")
+          end
+        end
+
+        def log_root
+          klass = Module.const_get(Rails)
+          klass.root
+          rescue NameError
+            return __FILE__
+        end
+    end
+  end
+end

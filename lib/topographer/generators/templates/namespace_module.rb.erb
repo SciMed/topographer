@@ -1,6 +1,10 @@
-<% config[:namespace_files].each do |strategy_file| %>
-  require_relative '<%= strategy_file %>'
-<% end %>
+<%#
+  Having the end on the same line as the template code and the lack of indentation
+  is intentional to keep the output decently aligned
+%>
+<% config[:namespace_files].each do |namespace_file| %>
+require_relative '<%= namespace_file %>'<% end %>
+
 module Imports
   module <%= config[:module_name] %>
   end

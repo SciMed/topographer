@@ -1,0 +1,13 @@
+module Imports
+  module Runners
+    class <%= config[:strategy_class] %>
+      include Imports::Runners::Base
+
+      def initialize(file, import_class,  options={})
+        setup_runner(file, '<%= config[:import_name] %>', options)
+        @strategy_class = Imports::Strategy::<%= config[:strategy_class] %>
+        @import_class = import_class
+      end
+    end
+  end
+end

@@ -1,0 +1,9 @@
+module Imports
+  module Base
+    def self.run_import(file, import_class, import_runner_class, options)
+      logger = import_runner_class.run(file, import_class, options)
+      logger
+    end
+    private_class_method :run_import
+  end
+end

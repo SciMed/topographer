@@ -1,0 +1,23 @@
+<%% if logger %>
+  <div class="alert alert-error">
+    <p>Errors occured during import:</p>
+    <ol class="import-errors">
+      <%% logger.all_entries.each do |log_entry| %>
+        <%% if log_entry.failure? %>
+          <li>
+            <%%= log_entry.source_identifier %> - <%%= log_entry.message %>
+            <ul>
+              <%% log_entry.details.each do |_, messages| %>
+                <%% messages.each do |message| %>
+                  <li>
+                    <%%= message %>
+                  </li>
+                <%% end %>
+              <%% end %>
+            </ul>
+          </li>
+        <%% end %>
+      <%% end %>
+    </ol>
+  </div>
+<%% end %>

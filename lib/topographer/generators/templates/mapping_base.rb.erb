@@ -1,0 +1,20 @@
+module Imports
+  module Mappings
+    module Base
+      def add_unmapped_importable_columns(mapper)
+        remaining_columns = self.class.importable_columns.except(*mapper.input_columns)
+        remaining_columns.each do |column, target_field|
+          mapper.optional_mapping(column, target_field)
+        end
+      end
+
+      def self.included(base)
+        base.class_eval do
+          def importable_columns
+            raise NotImplementedError
+          end
+        end
+      end
+    end
+  end
+end

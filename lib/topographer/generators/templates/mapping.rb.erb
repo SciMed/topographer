@@ -1,0 +1,52 @@
+module Imports
+  module Mappings
+    class <%= config[:model_class].name %>
+      extend Topographer::Importer::Importable
+      include Topographer::Importer::Helpers
+      include Imports::Mappings::Base
+
+      def self.get_mapper(strategy_class)
+        mapping = new
+        case
+          <% config[:strategy_classes].each do |strategy_class| %>
+          when strategy_class == <%= strategy_class %>
+            mapping.<%= strategy_class.name.demodulize.underscore %><%end%>
+          else
+            raise "Unsupported import strategy: #{strategy_class}"
+        end
+      end
+      # Map fields with the following syntax
+      #
+      # mapper.required_mapping('Input Column', 'output_field') for required mappings
+      # mapper.optional_mapping('Input Column', 'output_field') for optional mappings
+      # The above mappings can take an optional behavior block that can be used to transform the value being mapped.
+      # When a block is provided, its return value will be the value mapped to the output field.
+      #
+      # mapper.validation_field('Unique Validation Name', 'Input Column') { <validation block> } for a validation only mapping
+      # mapper.ignored_column('Column to ignore') to ignore a column
+      # mapper.default_value('output field for default') { <default_value> } to give an output field a default value
+      # mapper.key_field('output_field_name') to make a field available as a search key in strategies
+      #
+      # Model fields are:
+    <% config[:model_class].column_names.each do |column_name| %>
+      #   <%= column_name %><% end %>
+
+    <% config[:strategy_classes].each do |strategy_class| %>
+      def <%= strategy_class.name.demodulize.underscore %>
+        Topographer::Importer.build_mapper(::<%= config[:model_class] %>) do |mapper|
+          #Add your field mappings here using the above syntax
+        end
+        # Remove this line to activate this mapping
+        raise NotImplementedError
+      end
+    <%end%>
+
+      def self.importable_columns
+        {
+      <% config[:model_class].column_names.each do |column_name| %>
+          <%= "'#{column_name.humanize}' => '#{column_name}'," %><% end %>
+        }
+      end
+    end
+  end
+end
