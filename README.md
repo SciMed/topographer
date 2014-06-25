@@ -126,6 +126,7 @@ Assuming that the import class for Posts is defined in `lib/imports/mappings/pos
 
 A mapping would be defined as follows:
 
+```rb
         def import_mapping
 	      Topographer::Importer.build_mapper(::Post) do |mapper|
 
@@ -161,6 +162,7 @@ A mapping would be defined as follows:
 
 	      end
 	    end
+```
 
 In the above method, the call to `Topographer::Importer.build_mapper` requires a model class as an agrument.  This argument becomes the model class for the resulting Mapper and is available to any Strategy that uses the Mapper.  Generally, this class should be the ORM class that one is trying to import.
 
@@ -223,11 +225,13 @@ The block that follows the call to `.build_mapper` receives an object that can b
 
 Given the above mapping for a post import, one might import posts from within a rake task as follows:
 
-	logger = Imports::CommandLineImport.import_spreadsheet(
-	  '/var/www/apps/my_app/input_file.xlsx',
-	  Imports::Runners::ImportNewRecord,
-	  Imports::Mappings::Post
-	)
+```rb
+logger = Imports::CommandLineImport.import_spreadsheet(
+  '/var/www/apps/my_app/input_file.xlsx',
+  Imports::Runners::ImportNewRecord,
+  Imports::Mappings::Post
+)
+```	
 
 at which point, logger will encapsulate a log of all each row processed in the input file.
 
