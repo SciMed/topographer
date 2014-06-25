@@ -93,13 +93,17 @@ Mappings are defined as follows:
 
 * Assume the following ActiveRecord class:
 
-		class Post < ActiveRecord::Base
-		  belongs_to: author, class_name: 'User'
+```rb
 
-		  validates :author, presence: true
-		  validates :title, presence: true
-		  validates :body, presence: true
-		end
+class Post < ActiveRecord::Base
+  belongs_to: author, class_name: 'User'
+
+  validates :author, presence: true
+  validates :title, presence: true
+  validates :body, presence: true
+end
+
+```
 
 * with the following database columns:
 
