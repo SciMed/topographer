@@ -21,8 +21,13 @@ class Topographer::Importer::Input::Roo < Topographer::Importer::Input::Base
     @start_data_row.upto @end_data_row do |row_number|
       data = @sheet.row(row_number)
       source_identifier = "Row: #{row_number}"
-      yield Topographer::Importer::Input::SourceData.new(source_identifier,
-                                            Hash[@header.zip(data)])
+
+      if data.reject{ |column| column.blank? }.any?
+        yield Topographer::Importer::Input::SourceData.new(
+          source_identifier,
+          Hash[@header.zip(data)]
+        )
+      end
     end
   end
 end
