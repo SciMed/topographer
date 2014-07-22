@@ -10,4 +10,12 @@ class Topographer::Importer::Input::Base
   def each
     raise NotImplementedError
   end
+
+  def importable?
+    true
+  end
+
+  def failure_message
+    ''
+  end
 end

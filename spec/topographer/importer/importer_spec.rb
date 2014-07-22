@@ -29,7 +29,6 @@ class MockImportable < OpenStruct
       end
     end
   end
-
 end
 
 class HashImportStrategy < Topographer::Importer::Strategy::Base
@@ -70,6 +69,10 @@ class MockInput
     'test'
   end
 
+  def importable?
+    true
+  end
+
   def each
     yield Topographer::Importer::Input::SourceData.new('1', {'Field1' => 'datum1', 'Field2' => 'datum2'})
     yield Topographer::Importer::Input::SourceData.new('2', {'Field1' => 'datum2', 'Field2' => 'datum2', 'Field3' => 'datum3'})
@@ -82,10 +85,11 @@ describe Topographer::Importer do
   let(:input) { MockInput.new }
   let(:model_class) { MockImportable }
   let(:strategy_class) { HashImportStrategy }
-  let(:bad_input) do
+  let(:bad_header_input) do
     double 'Input',
            get_header: ['BadCol1', 'BadCol2', 'Field1', 'Field3'],
-           input_identifier: 'Test'
+           input_identifier: 'Test',
+           importable?: true
   end
   let(:simple_logger) { Topographer::Importer::Logger::Simple.new }
   let(:import_log) { Topographer::Importer.import_data(input, model_class, strategy_class, simple_logger) }
@@ -109,7 +113,7 @@ describe Topographer::Importer do
     end
 
     it 'does not import data with an invalid header' do
-      import_log = Topographer::Importer.import_data(bad_input, model_class, strategy_class, simple_logger)
+      import_log = Topographer::Importer.import_data(bad_header_input, model_class, strategy_class, simple_logger)
       expect(import_log.errors?).to be_true
       expect(import_log.fatal_error?).to be_true
       expect(import_log.fatal_errors.first.message).
