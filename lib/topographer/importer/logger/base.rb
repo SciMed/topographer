@@ -58,6 +58,10 @@ class Topographer::Importer::Logger::Base
     fatal_error? || failed_imports > 0
   end
 
+  def success?
+    !errors?
+  end
+
   def fatal_error?
     @fatal_errors.any?
   end
