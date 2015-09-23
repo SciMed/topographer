@@ -35,7 +35,7 @@ describe Topographer::Importer::Mapper::MappingValidator do
     it 'should raise an error if a name is in the validation list' do
       expect {
         validator.validate_unique_validation_name('Field1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -48,7 +48,7 @@ describe Topographer::Importer::Mapper::MappingValidator do
     it 'should raise an error if a field is already an output field' do
       expect {
         validator.validate_unique_output_mapping('output_field2')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -66,15 +66,15 @@ describe Topographer::Importer::Mapper::MappingValidator do
     it 'should raise an error if a field is already ignored' do
       expect {
         validator.validate_unique_column_mapping_type('ignored_column1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
     it 'should raise an error when validating an ignored column that has already been mapped' do
       expect {
         validator.validate_unique_column_mapping_type('input_column1', ignored: true)
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
       expect {
         validator.validate_unique_column_mapping_type('ignored_column1', ignored: true)
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -87,30 +87,30 @@ describe Topographer::Importer::Mapper::MappingValidator do
     it 'should raise an error if a new mapping does not have a unique output field' do
       expect {
         validator.validate_unique_mapping('input_column2', 'output_field2')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
     it 'should raise an error if a new mapping includes an already ignored column' do
       expect {
         validator.validate_unique_mapping('ignored_column2', 'output_field2')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
   it 'should raise an error if a new mapping includes many output fields' do
     expect {
       validator.validate_unique_mapping('ignored_column2', %w(output_field2 output_field3))
-    }.to raise_error
+    }.to raise_error Topographer::InvalidMappingError
   end
 
   describe '#validate_key_field' do
     it 'should raise an error if a new key field includes multiple fields' do
       expect {
         validator.validate_key_field(%w(output_field2 output_field3))
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
     it 'should raise an error if a key field is duplicated' do
       expect {
         validator.validate_key_field('key_field1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
     it 'should not raise an error if a key field is not already mapped' do
       expect {

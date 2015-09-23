@@ -16,7 +16,7 @@ describe Topographer::Importer::Strategy::Base do
   describe '#initialize' do
     it 'creates a new Strategy instance with the given mapper' do
       strategy = Topographer::Importer::Strategy::Base.new(mapper)
-      strategy.instance_variable_get(:@mapper).should be(mapper)
+      expect(strategy.instance_variable_get(:@mapper)).to be(mapper)
     end
   end
   describe '#import_record' do
@@ -27,16 +27,16 @@ describe Topographer::Importer::Strategy::Base do
 
   describe '#should_persist_import?' do
     it 'returns true if the status has no errors and the import is not a dry run' do
-      expect(strategy.should_persist_import?(status)).to be_true
+      expect(strategy.should_persist_import?(status)).to be_truthy
     end
     it 'returns false if the status has errors regardless of whether the import is a dry run or not' do
-      expect(strategy.should_persist_import?(bad_status)).to be_false
+      expect(strategy.should_persist_import?(bad_status)).to be_falsey
       strategy.dry_run = true
-      expect(strategy.should_persist_import?(bad_status)).to be_false
+      expect(strategy.should_persist_import?(bad_status)).to be_falsey
     end
     it 'returns false if the status has no errors and the import is a dry run' do
       strategy.dry_run = true
-      expect(strategy.should_persist_import?(status)).to be_false
+      expect(strategy.should_persist_import?(status)).to be_falsey
     end
   end
 

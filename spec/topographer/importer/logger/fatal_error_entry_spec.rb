@@ -4,12 +4,12 @@ describe Topographer::Importer::Logger::FatalErrorEntry do
   let(:entry) { Topographer::Importer::Logger::FatalErrorEntry.new('test-input', 'failure message') }
   describe '#failure?' do
     it 'should return true' do
-      expect(entry.failure?).to be_true
+      expect(entry.failure?).to be_truthy
     end
   end
   describe '#success?' do
     it 'should return false' do
-      expect(entry.success?).to be_false
+      expect(entry.success?).to be_falsey
     end
   end
   describe '#source_identifier' do

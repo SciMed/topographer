@@ -12,10 +12,10 @@ describe Topographer::Importer::Input::SourceData do
 
   describe '#empty?' do
     it 'should return true if there is no data' do
-      expect(with_no_data.empty?).to be_true
+      expect(with_no_data.empty?).to be_truthy
     end
     it 'should return false if there is data' do
-      expect(with_data.empty?).to be_false
+      expect(with_data.empty?).to be_falsey
     end
   end
 

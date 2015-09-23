@@ -23,12 +23,12 @@ describe Topographer::Importer::Mapper::DefaultFieldMapping do
   describe '#process_input' do
     it 'should return the result of the behavior block' do
       static_mapping.process_input({}, result)
-      expect(result.errors?).to be_false
+      expect(result.errors?).to be_falsey
       expect(result.data['field1']).to be 15
     end
     it 'should record any exceptions that occur within the block as errors' do
       failed_static_mapping.process_input({}, result)
-      expect(result.errors?).to be_true
+      expect(result.errors?).to be_truthy
       expect(result.errors.values).to include('FAILURE')
     end
     it 'should not rescue Exceptions that do not inherit from standard error' do

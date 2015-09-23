@@ -17,6 +17,15 @@ class MappedModel < OpenStruct
     end
   end
 
+  # def method_missing(symbol, *args)
+  #   if symbol != :attributes && attributes
+  #     attributes
+  #     attributes[symbol.to_s]
+  #   else
+  #     super
+  #   end
+  # end
+
   def save
     true
   end

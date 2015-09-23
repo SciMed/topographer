@@ -37,82 +37,82 @@ describe Topographer::Importer::Mapper::FieldMapping do
     context 'required mappings' do
       it 'maps required simple mappings when input is valid' do
         required_simple_mapping.process_input(valid_input, result)
-        expect(result.errors?).to be_false
+        expect(result.errors?).to be_falsey
         expect(result.data['output_column']).to eql(4)
       end
       it 'maps required complex mappings when input is valid' do
         required_complex_mapping.process_input(valid_input, result)
-        expect(result.errors?).to be_false
+        expect(result.errors?).to be_falsey
         expect(result.data['output_column']).to eql(15)
       end
       it 'returns an error for required simple mappings when the input key is missing' do
         required_simple_mapping.process_input({}, result)
-        expect(result.errors?).to be_true
+        expect(result.errors?).to be_truthy
         expect(result.errors.values).to include('Missing required input(s): `field1` for `output_column`')
-        expect(result.data.empty?).to be_true
+        expect(result.data.empty?).to be_truthy
       end
       it 'returns an error for required simple mappings when the input data is blank' do
         required_simple_mapping.process_input({'field1' => nil}, result)
-        expect(result.errors?).to be_true
+        expect(result.errors?).to be_truthy
         expect(result.errors.values).to include('Missing required input(s): `field1` for `output_column`')
         expect(result.data['output_column']).to be_nil
       end
       it 'returns an error for required simple mappings when the mapping block raises an exception' do
         required_simple_mapping_with_validation.process_input({'field1' => 3}, result)
-        expect(result.errors?).to be_true
+        expect(result.errors?).to be_truthy
         expect(result.errors.values).to include('Field1 MUST BE 4')
-        expect(result.data.empty?).to be_true
+        expect(result.data.empty?).to be_truthy
       end
       it 'returns an error for required complex mappings when the input key is missing' do
         required_complex_mapping.process_input({'field1' => 4}, result)
-        expect(result.errors?).to be_true
+        expect(result.errors?).to be_truthy
         expect(result.errors.values).to include('Missing required input(s): `field2, field3` for `output_column`')
-        expect(result.data.empty?).to be_true
+        expect(result.data.empty?).to be_truthy
       end
       it 'returns an error for required complex mappings when the mapping block raises an exception' do
         required_complex_mapping.process_input(invalid_complex_input, result)
-        expect(result.errors?).to be_true
+        expect(result.errors?).to be_truthy
         expect(result.errors.values).to include('Field1 MUST BE 4')
-        expect(result.data.empty?).to be_true
+        expect(result.data.empty?).to be_truthy
       end
     end
     context 'optional mappings' do
       it 'maps optional simple mappings when input is valid' do
         optional_simple_mapping.process_input(valid_input, result)
-        expect(result.errors?).to be_false
+        expect(result.errors?).to be_falsey
         expect(result.data['output_column']).to eql(4)
       end
       it 'maps optional complex mappings when input is valid' do
         optional_complex_mapping.process_input(valid_input, result)
-        expect(result.errors?).to be_false
+        expect(result.errors?).to be_falsey
         expect(result.data['output_column']).to eql(15)
       end
       it 'does not return an error for optional simple mappings when the input key is missing' do
         optional_simple_mapping.process_input({}, result)
-        expect(result.errors?).to be_false
-        expect(result.data.empty?).to be_true
+        expect(result.errors?).to be_falsey
+        expect(result.data.empty?).to be_truthy
       end
       it 'does not return an error for optional simple mappings when the input data is blank' do
         optional_simple_mapping.process_input({'field1' => nil}, result)
-        expect(result.errors?).to be_false
+        expect(result.errors?).to be_falsey
         expect(result.data['output_column']).to be_nil
       end
       it 'does not return an error for optional complex mappings when an input key is missing' do
         optional_complex_mapping.process_input({'field1' => 4}, result)
-        expect(result.errors?).to be_false
-        expect(result.data.empty?).to be_true
+        expect(result.errors?).to be_falsey
+        expect(result.data.empty?).to be_truthy
       end
       it 'returns an error for optional complex mappings when the mapping block raises an exception' do
         optional_complex_mapping.process_input(invalid_complex_input, result)
-        expect(result.errors?).to be_true
+        expect(result.errors?).to be_truthy
         expect(result.errors.values).to include('Field1 MUST BE 4')
-        expect(result.data.empty?).to be_true
+        expect(result.data.empty?).to be_truthy
       end
     end
     it 'maps data when the result of the mapping is a false value' do
       #required_simple_mapping.stub(:apply_mapping).and_return(false)
       required_simple_mapping.process_input({'field1' => false}, result)
-      expect(result.errors?).to be_false
+      expect(result.errors?).to be_falsey
       expect(result.data['output_column']).to eql(false)
     end
     it 'should not rescue Exceptions that do not inherit from standard error' do

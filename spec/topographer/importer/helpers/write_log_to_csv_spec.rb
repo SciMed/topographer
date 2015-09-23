@@ -55,14 +55,14 @@ describe Topographer::Importer::Helpers::WriteLogToCSV do
   describe '#write_log_to_csv' do
     it 'should write a passed logger instance to a CSV file' do
       file = double('file')
-      CSV.should_receive(:open).with('fake_file_path', 'wb').and_yield(file)
-      file.should_receive(:<<).exactly(12).times
+      expect(CSV).to receive(:open).with('fake_file_path', 'wb').and_yield(file)
+      expect(file).to receive(:<<).exactly(12).times
       Topographer::Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(logger, 'fake_file_path', write_all: true)
     end
     it 'should only write failures and fatal errors if write_all is false' do
       file = double('file')
-      CSV.should_receive(:open).with('fake_file_path', 'wb').and_yield(file)
-      file.should_receive(:<<).exactly(10).times
+      expect(CSV).to receive(:open).with('fake_file_path', 'wb').and_yield(file)
+      expect(file).to receive(:<<).exactly(10).times
       Topographer::Importer::Helpers::WriteLogToCSV.instance.write_log_to_csv(logger, 'fake_file_path', write_all: false)
     end
   end

@@ -37,17 +37,17 @@ describe Topographer::Importer::Logger::Simple do
   describe '#errors?' do
     it 'returns true if there are fatal errors' do
       logger.log_fatal('input', 'FATAL ERROR')
-      expect(logger.errors?).to be_true
+      expect(logger.errors?).to be_truthy
     end
     it 'returns true if there are import errors' do
       logger.log_failure({record_id: 2,
                           message: 'failure'})
-      expect(logger.errors?).to be_true
+      expect(logger.errors?).to be_truthy
     end
     it 'returns false if there are no errors' do
       logger.log_success({record_id: 2,
                           message: 'failure'})
-      expect(logger.errors?).to be_false
+      expect(logger.errors?).to be_falsey
     end
   end
 end

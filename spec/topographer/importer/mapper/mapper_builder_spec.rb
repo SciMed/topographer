@@ -21,7 +21,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
       builder.required_mapping('input_column1', 'output_field1')
       expect{
         builder.required_mapping('input_column2', 'output_field1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -42,7 +42,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
       builder.optional_mapping('input_column1', 'output_field1')
       expect{
         builder.optional_mapping('input_column2', 'output_field1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -57,7 +57,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
     it 'should raise an error if there is no behavior block provided' do
       expect {
         builder.validation_field('validation_1', 'input_column1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
     it 'should raise an error if a validation mapping already exists with a given name' do
       builder.validation_field('validation_1', 'input_column1') do
@@ -67,7 +67,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
         builder.validation_field('validation_1', 'input_column1') do
           return true
         end
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -82,7 +82,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
     it 'should raise an error if there is no behavior block provided' do
       expect {
         builder.default_value('output_field1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
     it 'should raise an error if a default value mapping already exists for a column' do
       builder.default_value('output_field1') do
@@ -92,7 +92,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
         builder.default_value('output_field1') do
           return true
         end
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -107,7 +107,7 @@ describe Topographer::Importer::Mapper::MapperBuilder do
       expect {
 
         builder.key_field('output_field1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 
@@ -122,10 +122,10 @@ describe Topographer::Importer::Mapper::MapperBuilder do
       builder.required_mapping('column2', 'field1')
       expect {
         builder.ignored_column('column1')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
       expect {
         builder.ignored_column('column2')
-      }.to raise_error
+      }.to raise_error Topographer::InvalidMappingError
     end
   end
 end

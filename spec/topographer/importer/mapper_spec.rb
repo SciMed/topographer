@@ -7,15 +7,15 @@ describe Topographer::Importer::Mapper do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping 'Field1', 'field_1'
         end
-        mapper.required_mapping_columns.should include("Field1")
-        mapper.output_fields.should include('field_1')
+        expect(mapper.required_mapping_columns).to include("Field1")
+        expect(mapper.output_fields).to include('field_1')
       end
       it 'can require a many to one field mapping' do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.required_mapping ['Field1', 'Field2'], 'field_1'
         end
-        mapper.required_mapping_columns.should include("Field1", "Field2")
-        mapper.output_fields.should include('field_1')
+        expect(mapper.required_mapping_columns).to include("Field1", "Field2")
+        expect(mapper.output_fields).to include('field_1')
       end
       it 'cannot require a one to many field mapping' do
         expect { mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
@@ -29,15 +29,15 @@ describe Topographer::Importer::Mapper do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping 'Field1', 'field_1'
         end
-        mapper.optional_mapping_columns.should include("Field1")
-        mapper.output_fields.should include('field_1')
+        expect(mapper.optional_mapping_columns).to include("Field1")
+        expect(mapper.output_fields).to include('field_1')
       end
       it 'can create an optional many to one field mapping' do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.optional_mapping ['Field1', 'Field2'], 'field_1'
         end
-        mapper.optional_mapping_columns.should include("Field1", "Field2")
-        mapper.output_fields.should include('field_1')
+        expect(mapper.optional_mapping_columns).to include("Field1", "Field2")
+        expect(mapper.output_fields).to include('field_1')
       end
       it 'cannot create an optional one to many field mapping' do
         expect { mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
@@ -51,8 +51,8 @@ describe Topographer::Importer::Mapper do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
           m.ignored_column 'Field1'
         end
-        mapper.ignored_mapping_columns.should include('Field1')
-        mapper.output_fields.should be_empty
+        expect(mapper.ignored_mapping_columns).to include('Field1')
+        expect(mapper.output_fields).to be_empty
       end
 
       it 'raises an error when adding a mapping whose output is already an output of another mapping' do
@@ -85,7 +85,7 @@ describe Topographer::Importer::Mapper do
           end
         end
         expect(mapper.validation_mapping_columns).to include('Field1')
-        expect(mapper.output_fields.empty?).to be_true
+        expect(mapper.output_fields.empty?).to be_truthy
       end
       it 'can create a multicolumn validation' do
         mapper = Topographer::Importer::Mapper.build_mapper(Object) do |m|
@@ -94,7 +94,7 @@ describe Topographer::Importer::Mapper do
           end
         end
         expect(mapper.validation_mapping_columns).to eql(['Field1', 'Field2'])
-        expect(mapper.output_fields.empty?).to be_true
+        expect(mapper.output_fields.empty?).to be_truthy
       end
       it 'raises an error if a validation name is repeated' do
         expect {
@@ -189,32 +189,32 @@ describe Topographer::Importer::Mapper do
     let(:unmapped_column_structure) {['Field1', 'Field2', 'Field3', 'Field4', 'UnmappedField'] }
 
     it 'returns false if required fields are missing' do
-      expect(mapper.input_structure_valid?(missing_required_column_structure)).to be_false
+      expect(mapper.input_structure_valid?(missing_required_column_structure)).to be_falsey
     end
     it 'returns false if a validation field is missing' do
-      expect(mapper.input_structure_valid?(missing_validation_column_structure)).to be_false
+      expect(mapper.input_structure_valid?(missing_validation_column_structure)).to be_falsey
     end
     it 'returns true if all of the required fields are present' do
-      expect(mapper.input_structure_valid?(valid_input_structure_without_options)).to be_true
+      expect(mapper.input_structure_valid?(valid_input_structure_without_options)).to be_truthy
     end
     it 'returns true if all the required and optional fields are present' do
-      expect(mapper.input_structure_valid?(valid_input_structure_with_options)).to be_true
+      expect(mapper.input_structure_valid?(valid_input_structure_with_options)).to be_truthy
     end
     it 'returns true regardless of whether ignored fields are present' do
-      expect(mapper.input_structure_valid?(valid_input_structure_with_options)).to be_true
-      expect(mapper.input_structure_valid?(valid_input_structure_with_options+['Field5'])).to be_true
+      expect(mapper.input_structure_valid?(valid_input_structure_with_options)).to be_truthy
+      expect(mapper.input_structure_valid?(valid_input_structure_with_options+['Field5'])).to be_truthy
     end
     context 'not ignoring unmapped columns' do
       it 'returns false if there are any extra fields that have not been ignored' do
-        expect(mapper.input_structure_valid?(bad_column_structure)).to be_false
+        expect(mapper.input_structure_valid?(bad_column_structure)).to be_falsey
       end
     end
     context 'ignoring unmapped columns' do
       it 'returns false if there are any extra fields that have not been ignored and required fields are missing' do
-        expect(mapper.input_structure_valid?(bad_column_structure, ignore_unmapped_columns: true)).to be_false
+        expect(mapper.input_structure_valid?(bad_column_structure, ignore_unmapped_columns: true)).to be_falsey
       end
       it 'returns true if there are any extra fields that have not been ignored but all required fields are present' do
-        expect(mapper.input_structure_valid?(unmapped_column_structure, ignore_unmapped_columns: true)).to be_true
+        expect(mapper.input_structure_valid?(unmapped_column_structure, ignore_unmapped_columns: true)).to be_truthy
       end
     end
   end
@@ -328,24 +328,24 @@ describe Topographer::Importer::Mapper do
 
     it 'returns an error if required field is missing in input data' do
       invalid_field_result = mapper.map_input(missing_field_input)
-      expect(invalid_field_result.errors?).to be_true
+      expect(invalid_field_result.errors?).to be_truthy
       expect(invalid_field_result.errors['field_4']).to include('Missing required input(s): `Field3` for `field_4`')
     end
 
     it 'returns an error if a validation does not pass' do
       invalid_data_result = mapper.map_input(invalid_data_input)
-      expect(invalid_data_result.errors?).to be_true
+      expect(invalid_data_result.errors?).to be_truthy
       expect(invalid_data_result.errors['Field2 Validation']).to include('FAILURE')
 
     end
 
     it 'does not return an error if an optional field is missing in the input data' do
-      expect(result.errors?).to be_false
+      expect(result.errors?).to be_falsey
     end
 
     it 'returns a `blank row` error if an entire row is blank' do
       empty_result = mapper.map_input(empty_input)
-      expect(empty_result.errors?).to be_true
+      expect(empty_result.errors?).to be_truthy
       expect(empty_result.errors['EmptyRow']).to include('empty row')
     end
   end

@@ -18,7 +18,7 @@ class MockImportable < OpenStruct
     end
   end
 
-  def self.get_mapper(strategy_class)
+  def self.get_mapper(strategy_class, _)
     case
     when  strategy_class == HashImportStrategy
       Topographer::Importer::Mapper.build_mapper(MockImportable) do |mapping|
@@ -108,25 +108,25 @@ describe Topographer::Importer do
     end
 
     it 'logs invalid data' do
-      expect(import_log.errors?).to be_true
+      expect(import_log.errors?).to be_truthy
       expect(import_log.failed_imports).to be 1
     end
 
     it 'does not import data with an invalid header' do
       import_log = Topographer::Importer.import_data(bad_header_input, model_class, strategy_class, simple_logger)
-      expect(import_log.errors?).to be_true
-      expect(import_log.fatal_error?).to be_true
+      expect(import_log.errors?).to be_truthy
+      expect(import_log.fatal_error?).to be_truthy
       expect(import_log.fatal_errors.first.message).
         to match(/Invalid Input Header.+Missing Columns:\s+Field2.+Invalid Columns:\s+BadCol1.+BadCol2/)
     end
 
     it 'does import data with umapped columns when ignoring unmapped columns' do
       extra_column_input = input
-      extra_column_input.stub(:get_header) { %w(Field1 Field2 Field3 UnknownField1) }
+      allow(extra_column_input).to receive(:get_header) { %w(Field1 Field2 Field3 UnknownField1) }
 
       import_log = Topographer::Importer.import_data(extra_column_input, model_class, strategy_class, simple_logger, ignore_unmapped_columns: true)
 
-      expect(import_log.fatal_error?).to be_false
+      expect(import_log.fatal_error?).to be_falsey
       expect(import_log.total_imports).to be 4
       expect(import_log.successful_imports).to be 3
     end
