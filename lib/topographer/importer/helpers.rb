@@ -1,18 +1,24 @@
-module Topographer::Importer::Helpers
-  require_relative 'helpers/write_log_to_csv'
+require_relative 'helpers/write_log_to_csv'
 
-  def boolify(word)
-    return nil if word.nil?
+module Topographer
+  class Importer
+    module Helpers
 
-    case word.downcase
-    when 'yes'
-      true
-    when 'no'
-      false
-    when 'true'
-      true
-    when 'false'
-      false
+      def boolify(word)
+        return nil if word.nil?
+
+        case word.downcase
+          when 'yes'
+            true
+          when 'no'
+            false
+          when 'true'
+            true
+          when 'false'
+            false
+        end
+      end
     end
   end
 end
+
