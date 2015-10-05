@@ -19,7 +19,7 @@ module Topographer
         # @return [Array<String>] the headers in the file
         def get_header
           unless @header
-            if @sheet.headers == true
+            if @sheet.headers === true
               @sheet.shift
             elsif @sheet.headers.nil?
               @header = []
