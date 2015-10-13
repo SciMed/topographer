@@ -18,6 +18,7 @@ class Topographer::Importer
   end
 
   # @param mapping_generator  [#get_mapper] the object responsible for deciding which mapping to use for the strategy
+  # @param strategy either a Class that inherits from Topographer::Importer::Strategy::Base or an instance of a strategy
   def initialize(input, mapping_generator, strategy, logger, options = {})
     @logger = logger
     @fatal_errors = []
