@@ -7,6 +7,9 @@ module Topographer
         # Creates a new DelimitedSpreadsheet input wrapper.  NOTE: Since Topographer relies on headers
         # to map from input to output columns, you should enable header parsing in the CSV object passed in
         #
+        # NOTE: the CSV used to construct this object should have the :return_headers flag set or the first
+        # row of data will be lost!
+        #
         # @param name [String] the name of the delimited file being dealt with (e.g. My Data File 1)
         # @param spreadsheet [CSV] the spreadsheet object to be parsed
         def initialize(name, spreadsheet)
