@@ -66,12 +66,12 @@ class Topographer::Importer
   end
 
   def invalid_header_message(mapper)
-    error = 'Invalid Input Header - '
+    error = 'Invalid Input Header -'
     if mapper.missing_columns.any?
-      error << "Missing Columns: #{mapper.missing_columns.join(', ')}"
+      error << " Missing Columns: #{mapper.missing_columns.join(', ')}"
     end
     if mapper.bad_columns.any?
-      error << "Invalid Columns: #{mapper.bad_columns.join(', ')}"
+      error << " Invalid Columns: #{mapper.bad_columns.join(', ')}"
     end
     error
   end
