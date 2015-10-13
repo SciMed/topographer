@@ -18,7 +18,7 @@ class Topographer::Importer
   end
 
   # @param mapping_generator  [#get_mapper] the object responsible for deciding which mapping to use for the strategy
-  def initialize(input, mapping_generator, strategy_class, logger, options = {})
+  def initialize(input, mapping_generator, strategy, logger, options = {})
     @logger = logger
     @fatal_errors = []
 
@@ -26,10 +26,12 @@ class Topographer::Importer
     ignore_unmapped_columns = options.fetch(:ignore_unmapped_columns, false)
     external_data = options.fetch(:external_data, {})
 
+    strategy_class = strategy.is_a?(Class) ? strategy : strategy.class
+
     mapper = mapping_generator.get_mapper(strategy_class, external_data)
 
     if importable?(input, mapper, ignore_unmapped_columns)
-      strategy = strategy_class.new(mapper)
+      strategy = setup_strategy(mapper, strategy, strategy_class)
       strategy.dry_run = dry_run
       import_data(strategy, input, mapper.model_class.name)
     else
@@ -37,6 +39,14 @@ class Topographer::Importer
     end
   end
 
+  def setup_strategy(mapper, strategy, strategy_class)
+    if strategy == strategy_class
+      strategy_class.new(mapper) # supports legacy code
+    else
+      strategy.mapper = mapper
+      strategy
+    end
+  end
 
   def import_data(strategy, input, import_class)
     input.each do |data|

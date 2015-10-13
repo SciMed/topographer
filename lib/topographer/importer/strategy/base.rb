@@ -3,8 +3,7 @@ module Topographer
     module Strategy
       class Base
 
-        attr_reader :mapper
-        attr_accessor :dry_run
+        attr_accessor :dry_run, :mapper
 
         def initialize(mapper)
           @mapper = mapper

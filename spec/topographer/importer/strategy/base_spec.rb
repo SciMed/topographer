@@ -13,12 +13,23 @@ describe Topographer::Importer::Strategy::Base do
     double 'Status',
            errors?: true
   end
+
+  subject do
+    described_class.new(mapper)
+  end
+
   describe '#initialize' do
     it 'creates a new Strategy instance with the given mapper' do
       strategy = Topographer::Importer::Strategy::Base.new(mapper)
       expect(strategy.instance_variable_get(:@mapper)).to be(mapper)
     end
   end
+
+  it 'has an attr_accessor for mapper' do
+    expect(subject.respond_to?(:mapper=)).to be_truthy
+    expect(subject.respond_to?(:mapper)).to be_truthy
+  end
+
   describe '#import_record' do
     it 'should raise NotImplementedError' do
       expect { strategy.import_record(nil) }.to raise_error(NotImplementedError)

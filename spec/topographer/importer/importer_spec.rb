@@ -130,6 +130,22 @@ describe Topographer::Importer do
       expect(import_log.total_imports).to be 4
       expect(import_log.successful_imports).to be 3
     end
+    context 'using an instance of a strategy class' do
+      let(:hash_strategy) do
+        HashImportStrategy.new(nil)
+      end
+      before do
+        allow(hash_strategy).to receive(:mapper=).and_call_original
+      end
+      it 'sets the mapper of the strategy class' do
+        Topographer::Importer.import_data(input, model_class, hash_strategy, simple_logger)
+        expect(hash_strategy).to have_received(:mapper=)
+      end
+      it 'imports data from valid import objects' do
+        import_log = Topographer::Importer.import_data(input, model_class, hash_strategy, simple_logger)
+        expect(import_log.total_imports).to be 4
+      end
+    end
   end
   describe '.build_mapper' do
     it 'returns a mapper with the defined mappings' do
