@@ -56,8 +56,7 @@ module Topographer
             validation_field_mapping.process_input(source_data.data, mapping_result)
           end
 
-          output_fields.each do |output_field|
-            field_mapping = mappings[output_field]
+          mappings.each do |_output_field, field_mapping|
             field_mapping.process_input(source_data.data, mapping_result)
           end
         end
