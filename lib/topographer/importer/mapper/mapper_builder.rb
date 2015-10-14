@@ -6,7 +6,7 @@ module Topographer
         include Topographer::Importer::Mapper::MappingValidator
 
         attr_reader :required_mappings, :optional_mappings, :ignored_mappings,
-          :validation_mappings, :default_values, :key_fields
+          :validation_mappings, :default_values, :key_fields, :field_mappings
 
         def initialize
           @required_mappings = {}
@@ -15,16 +15,21 @@ module Topographer
           @validation_mappings = {}
           @default_values = {}
           @key_fields = []
+          @field_mappings = {}
         end
 
         def required_mapping(input_columns, output_field, &mapping_behavior)
           validate_unique_mapping(input_columns, output_field)
-          @required_mappings[output_field] = Topographer::Importer::Mapper::FieldMapping.new(true, input_columns, output_field, &mapping_behavior)
+          mapping = Topographer::Importer::Mapper::FieldMapping.new(true, input_columns, output_field, &mapping_behavior)
+          @required_mappings[output_field] = mapping
+          @field_mappings[output_field] = mapping
         end
 
         def optional_mapping(input_columns, output_field, &mapping_behavior)
           validate_unique_mapping(input_columns, output_field)
-          @optional_mappings[output_field] = Topographer::Importer::Mapper::FieldMapping.new(false, input_columns, output_field, &mapping_behavior)
+          mapping = Topographer::Importer::Mapper::FieldMapping.new(false, input_columns, output_field, &mapping_behavior)
+          @optional_mappings[output_field] = mapping
+          @field_mappings[output_field] = mapping
         end
 
         def validation_field(name, input_columns, &mapping_behavior)
@@ -34,7 +39,9 @@ module Topographer
 
         def default_value(output_field, &mapping_behavior)
           validate_unique_mapping([], output_field)
-          @default_values[output_field] = Topographer::Importer::Mapper::DefaultFieldMapping.new(output_field, &mapping_behavior)
+          mapping = Topographer::Importer::Mapper::DefaultFieldMapping.new(output_field, &mapping_behavior)
+          @default_values[output_field] = mapping
+          @field_mappings[output_field] = mapping
         end
 
         def key_field(output_field)

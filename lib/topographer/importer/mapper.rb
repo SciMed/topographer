@@ -30,6 +30,7 @@ module Topographer
         @validation_mappings = mapper_builder.validation_mappings
         @default_values = mapper_builder.default_values
         @key_fields = mapper_builder.key_fields
+        @field_mappings = mapper_builder.field_mappings
         @model_class = model_class
       end
 

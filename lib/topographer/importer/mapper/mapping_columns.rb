@@ -40,7 +40,7 @@ module Topographer
         end
 
         def mappings
-          required_mappings.merge(optional_mappings).merge(ignored_mappings).merge(default_values)
+          @field_mappings
         end
 
         def non_ignored_columns
