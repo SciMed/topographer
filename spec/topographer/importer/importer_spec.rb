@@ -18,7 +18,7 @@ class MockImportable < OpenStruct
     end
   end
 
-  def self.get_mapper(strategy_class, _)
+  def self.get_mapper(strategy_class)
     case
     when  strategy_class == HashImportStrategy
       Topographer::Importer::Mapper.build_mapper(MockImportable) do |mapping|
