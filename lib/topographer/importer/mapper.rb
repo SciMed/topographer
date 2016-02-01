@@ -52,10 +52,6 @@ module Topographer
         if source_data.empty?
           handle_no_data(mapping_result)
         else
-          @validation_mappings.values.each do |validation_field_mapping|
-            validation_field_mapping.process_input(source_data.data, mapping_result)
-          end
-
           mappings.each do |_output_field, field_mapping|
             field_mapping.process_input(source_data.data, mapping_result)
           end

@@ -34,7 +34,9 @@ module Topographer
 
         def validation_field(name, input_columns, &mapping_behavior)
           validate_unique_validation_name(name)
-          @validation_mappings[name] = Topographer::Importer::Mapper::ValidationFieldMapping.new(name, input_columns, &mapping_behavior)
+          mapping = Topographer::Importer::Mapper::ValidationFieldMapping.new(name, input_columns, &mapping_behavior)
+          @validation_mappings[name] = mapping
+          @field_mappings[name] = mapping
         end
 
         def default_value(output_field, &mapping_behavior)
