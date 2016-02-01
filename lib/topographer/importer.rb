@@ -25,11 +25,10 @@ class Topographer::Importer
 
     dry_run = options.fetch(:dry_run, false)
     ignore_unmapped_columns = options.fetch(:ignore_unmapped_columns, false)
-    external_data = options.fetch(:external_data, {})
 
     strategy_class = strategy.is_a?(Class) ? strategy : strategy.class
 
-    mapper = mapping_generator.get_mapper(strategy_class, external_data)
+    mapper = mapping_generator.get_mapper(strategy_class)
 
     if importable?(input, mapper, ignore_unmapped_columns)
       strategy = setup_strategy(mapper, strategy, strategy_class)
